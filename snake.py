@@ -1,6 +1,8 @@
 import pygame
 import math
 import random
+import tkinter as tk
+from tkinter import messagebox 
 
 # width, height and rows for the snake game, can be changed based upon difficulty level
 width = 500
@@ -73,6 +75,16 @@ class snake(object):
                         square.position = (square.position[0], 0)
                     else:
                         square.move(square.directionX, square.directionY)
+
+    # reset the game if it ends
+    def reset(self, postion):
+        self.head = square(position[0])
+        self.body = []
+        self.body.append(self.head)
+        self.turns = {}
+        self.directionX = 0
+        self.directionY = 1
+
 
 
     def addSquare(self):
@@ -161,7 +173,7 @@ def main():
             # check if the head of the snake is on top of any other position in the range of the snake body
             if snakeGame.body[x].position in list(map(lambda z: z.position, snackGamebody[x + 1:])):
                 print('Score: ', len(snackGame.body))
-                displayMessageBox()
+                displayMessageBox('Game Over!', 'Play Again ... ')
                 snakeGame.reset((10, 10))
                 break;
         
@@ -190,6 +202,18 @@ def drawGrid(game):
         yAxis += sizeBetweenRows
         pygame.draw.line(game, (255, 255, 255), (xAxis, 0), (xAxis, width))
         pygame.draw.line(game, (255, 255, 255), (0, yAxis), (width, yAxis))
+
+
+# display a message box once the game has ended
+def displayMessageBox(subject, content):
+    root = tk.Tk()
+    root.attributes("-topmost", True)
+    root.withdraw()
+    messagebox.showinfo(subject, content)
+    try:
+        root.destroy
+    except:
+        pass
 
 
 # generate snack for snake to eat
