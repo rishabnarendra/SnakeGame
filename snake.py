@@ -75,6 +75,25 @@ class snake(object):
                         square.move(square.directionX, square.directionY)
 
 
+    def addSquare(self):
+        snakeTail = self.body[-1]
+        directionX = tail.directionX
+        directionY = tail.directionY
+
+        # add square to correct location and give it the correct direction of movement
+        if directionX == 1 and directionY == 0:
+            self.body.append(square(snakeTail.position[0] - 1, snakeTail.position[1]))
+        elif directionX == -1 and directionY == 0:
+            self.body.append(square(snakeTail.position[0] + 1, snakeTail.position[1]))
+        elif directionX == 0 and directionY == 1:
+            self.body.append(square(snakeTail.position[0], snakeTail.position[1] - 1))
+        elif directionX == 0 and directionY == -1:
+            self.body.append(square(snakeTail.position[0], snakeTail.position[1] + 1))
+        self.body[-1].directionX = directionX
+        self.body[-1].directionY = directionY
+          
+
+    # draw the squares of the snake
     def draw(self, game):
         for index, square in enumerate(self.body):
             if index == 0:
@@ -84,6 +103,7 @@ class snake(object):
 
 
 
+# class that represents the look of the snake and its movement 
 class square(object):
     # initialize the square object 
     def initialize(self, start, directionX = 1, directionY = 0, color = (255, 0, 0)):
@@ -163,7 +183,7 @@ def drawGrid(game):
 
 
 # generate snack for snake to eat
-def generateSnakeSnack(rows, item):
+def generateSnakeSnack(item):
     positions = item.body
     while True:
         xSnack = rand.randrange(rows)
