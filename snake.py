@@ -8,12 +8,81 @@ height = 500
 rows = 20
 
 
+class snake(object):
+    snakeBody = []
+    turns = {}
+
+    # intialize the snake object 
+    def initialize(self, color, position):
+        self.color = color
+        self.head = square(position)
+        self.body.append(self.head)
+        self.directionX = 0
+        self.directionY = 1
+
+    # move the snake object based on the key pressed 
+    def move(self):
+        for event in pygame.event.get():
+            if(event.type == pygame.QUIT):
+                pygame.quit()
+
+            # dictionary of all keys and whether they were pressed or not
+            keys = pygame.key.get_pressed()
+            # change direction of the head of the snake 
+            for key in keys:
+                if keys[pygame.K_LEFT]:
+                    self.directionX = -1
+                    self.directionY = 0
+                    self.turns[self.head.pos[:]] = self[directionX, self.directionY]
+
+                elif keys[pygame.K_RIGHT]:
+                    self.directionX = 1
+                    self.directionY = 0
+                    self.turns[self.head.pos[:]] = self[directionX, self.directionY]
+
+                elif keys[pygame.K_UP]:
+                    self.directionX = 0
+                    self.directionY = -1
+                    self.turns[self.head.pos[:]] = self[directionX, self.directionY]
+
+                elif keys[pygame.K_DOWN]:
+                    self.directionX = 0
+                    self.directionY = 1
+                    self.turns[self.head.pos[:]] = self[directionX, self.directionY]
+
+
+            for index, square in enumerate(self.body):
+                position = square.position[:]
+                if position in self.turns:
+                    turn = self.turns[position]
+                    square.move(turn[0], turn[1])
+                    if i == len(self.body) - 1:
+                        self.turns.pop(position)
+                # wrap around if we are out of bounds in the grid or continue moving 
+                else:
+                    if directionX == -1 and square.position[0] <= 0:
+                        square.position = (square.rows - 1, square.position[1])
+                    elif directionX == 1 and square.position[0] >= square.rows - 1:
+                        square.position = (0, square.position[1])
+                    elif directionY == -1 and square.position[1] <= 0:
+                        square.position = (square.position[1], square.rows - 1)
+                    elif directionX == 1 and square.position[0] >= square.rows - 1:
+                        square.position = (square.position[0], 0)
+                    else:
+                        square.move(square.directionX, square.directionY)
+
+
+    def draw(self, game):
+        for index, square in enumerate(self.body):
+            if index == 0:
+                square.draw(game, true)
+            else:
+                square.draw(game)
+
+
 def main():
-    print("dsvuasdgjbas")
     game = pygame.display.set_mode((width, height))
-    print("hello")
-    print(10)
-    # snakeGame = snake((255, 0, 0),(10, 10))
+    snakeGame = snake((255, 0, 0),(10, 10))
 
     endGame = True
     clock = pygame.time.Clock()
