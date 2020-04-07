@@ -139,7 +139,7 @@ class square(object):
 
 
 def main():
-    global snakeGame
+    global snakeGame, snakeSnack
     game = pygame.display.set_mode((width, height))
     snakeGame = snake((255, 0, 0),(10, 10))
     
@@ -155,15 +155,25 @@ def main():
         if snakeGame.body[0].position == snakeSnack.position:
             snackGame.addCube()
             snakeSnack = square(generateSnakeSnack(rows, snakeGame), color = (0, 255, 0))
+
+        # if snake crashes into itself the game is over
+        for x in range(len(snakeGame.body)):
+            # check if the head of the snake is on top of any other position in the range of the snake body
+            if snakeGame.body[x].position in list(map(lambda z: z.position, snackGamebody[x + 1:])):
+                print('Score: ', len(snackGame.body))
+                displayMessageBox()
+                snakeGame.reset((10, 10))
+                break;
         
         redrawWindow(game)  
 
 
 # redraw game window after each iteration
 def redrawWindow(game):
-    global snakeGame
+    global snakeGame, snakeSnack
     game.fill((0, 0, 0))
     snakeGame.draw(game)
+    snakeSnack.draw(game)
     drawGrid(game)
     pygame.display.update()
 
