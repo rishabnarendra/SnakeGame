@@ -8,9 +8,11 @@ height = 500
 rows = 20
 
 
+# class that represent our snake object and controls its movement and appearence 
 class snake(object):
     snakeBody = []
     turns = {}
+
 
     # intialize the snake object 
     def initialize(self, color, position):
@@ -19,6 +21,7 @@ class snake(object):
         self.body.append(self.head)
         self.directionX = 0
         self.directionY = 1
+
 
     # move the snake object based on the key pressed 
     def move(self):
@@ -80,6 +83,41 @@ class snake(object):
                 square.draw(game)
 
 
+
+class square(object):
+    # initialize the square object 
+    def initialize(self, start, directionX = 1, directionY = 0, color = (255, 0, 0)):
+        self.position = start
+        self.directionX = 1
+        self.directionY = 0
+        self.color = color
+
+
+    # Move the square object in the correct direction based on the key pressed 
+    def move(self, directionX, directionY):
+        self.directionX = directionX
+        self.directionY = directionY
+        self.position(self.poition[0] + self.directionX, self.position[1] + self.directionY)
+
+
+    def draw(self, game, eyes = False):
+        distance = self.width // self.rows
+        xIndex = self.position[0]
+        yIndex = self.position[1]
+
+        # draw the lines inside the grid to avoid difficulty of seeing seperating lines (this is drawing the moving squares of the snake)
+        pygame.draw.rect(game, self.color, (xIndex * distance + 1, yIndex * distance + 1, distance - 2, distance - 2))
+        
+        # draw the eyes of the snake, don't worry about the mathematical formula used to position the eyes
+        if eyes:
+            center = distance // 2
+            radius = 3
+            eye1 = (xIndex * distance + center - radius, yIndex * distance + 8)
+            eye2 = (xIndex * distance + distance - radius * 2, yIndex * distance + 8)
+            pygame.draw.circle(game, (0, 0, 0), eye1, radius)
+            pygame.draw.circle(game, (0, 0, 0), eye2, radius)
+
+
 def main():
     game = pygame.display.set_mode((width, height))
     snakeGame = snake((255, 0, 0),(10, 10))
@@ -95,7 +133,9 @@ def main():
 
 # redraw game window after each iteration
 def redrawWindow(game):
+    global snake
     game.fill((0, 0, 0))
+    snake.draw(game)
     drawGrid(game)
     pygame.display.update()
 
