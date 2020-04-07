@@ -97,7 +97,7 @@ class square(object):
     def move(self, directionX, directionY):
         self.directionX = directionX
         self.directionY = directionY
-        self.position(self.poition[0] + self.directionX, self.position[1] + self.directionY)
+        self.position = (self.position[0] + self.directionX, self.position[1] + self.directionY)
 
 
     def draw(self, game, eyes = False):
@@ -119,23 +119,31 @@ class square(object):
 
 
 def main():
+    global snakeGame
     game = pygame.display.set_mode((width, height))
     snakeGame = snake((255, 0, 0),(10, 10))
-
+    
+    snakeSnack = square(generateSnakeSnack(rows, snakeGame), color = (0, 255, 0))
+    
     endGame = True
     clock = pygame.time.Clock()
     while(endGame):
         pygame.time.delay(50)
         clock.tick(10)
+        snakeGame.move()
 
-        redrawWindow(game)
+        if snakeGame.body[0].position == snakeSnack.position:
+            snackGame.addCube()
+            snakeSnack = square(generateSnakeSnack(rows, snakeGame), color = (0, 255, 0))
+        
+        redrawWindow(game)  
 
 
 # redraw game window after each iteration
 def redrawWindow(game):
-    global snake
+    global snakeGame
     game.fill((0, 0, 0))
-    snake.draw(game)
+    snakeGame.draw(game)
     drawGrid(game)
     pygame.display.update()
 
@@ -152,5 +160,19 @@ def drawGrid(game):
         yAxis += sizeBetweenRows
         pygame.draw.line(game, (255, 255, 255), (xAxis, 0), (xAxis, width))
         pygame.draw.line(game, (255, 255, 255), (0, yAxis), (width, yAxis))
+
+
+# generate snack for snake to eat
+def generateSnakeSnack(rows, item):
+    positions = item.body
+    while True:
+        xSnack = rand.randrange(rows)
+        ySnack = rand.randrange(rows)
+        # make sure the snack generated is not on the snake 
+        if(len(list(filter(lambda z: z.position == (xSnack, ySnack), positions)))) > 0:
+           continue
+        else:
+            break
+    return (xSnack, ySnack)
 
 main()
